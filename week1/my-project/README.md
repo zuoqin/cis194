@@ -1,8 +1,8 @@
 # CIS 194 Week 1
-Haskell Basics
+## Haskell Basics
 
-stack new my-project
-cd my-project
-stack setup
-stack build
-stack exec my-project-exe
+1. stack new my-project
+2. cd my-project
+3. stack setup
+4. stack build
+5. stack exec my-project-exe
