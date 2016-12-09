@@ -1,42 +1,45 @@
--- Validating Credit Card Numbers1
+-- Log file parsing
 
 module LogAnalysis
-    ( toDigits,
-   	  toDigitsRev,
-   	  doubleEveryOther,
-   	  sumDigits,
-   	  validate
+    ( parseMessage,
+      parse,
+	  insert
     ) where
 
-double_function :: (Integer,Int) -> Integer
-double_function (x,y) = if y `mod` 2 == 1
-					then (2 * x )
-					else x
+import Log
 
 
-sumdigits_function :: Integer -> Integer
-sumdigits_function x = if x > 10
-					then x `mod` 10 + sumdigits_function (quot x 10)
-					else x
+insert :: LogMessage -> MessageTree -> MessageTree
+insert msg tr = tr
 
-array_to_index_tuple :: [Integer] -> [Integer]
-array_to_index_tuple a = map double_function (zip a [0..])
+testmsg :: String -> String
+testmsg msg = ((splitMessage msg) !!2)
 
-toDigits :: Integer -> [Integer]
-toDigits x
-	| x <= 0 		= []
-	| otherwise     = toDigits (x `div` 10) ++ [x `mod` 10]
+concatenatemsg :: [String] -> String
+concatenatemsg ls = foldr (++) " " ls
 
-doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther a = array_to_index_tuple a
+splitMessage :: String -> [String]
+splitMessage msg = words msg
 
-toDigitsRev :: Integer -> [Integer]
-toDigitsRev x = reverse( toDigits x )
+asciitonum :: (Char,Int) -> Int
+asciitonum (x,y) = ((fromEnum x) - 48) * (10 ^y)
 
-sumDigits :: [Integer] -> Integer
-sumDigits a = sum(map sumdigits_function a)
+errorstrtonum :: String -> Int
+errorstrtonum str = sum(map asciitonum (zip (reverse str) [0..]))
 
-validate :: Integer -> Bool
-validate x = if x `mod` 10 == 0
-		then True
-		else False
+integertoint :: Integer -> Int
+integertoint x = fromInteger(x)
+
+removespace :: String -> String
+removespace x = take ((length x) - 1) x
+
+parseMessage :: String -> LogMessage
+parseMessage msg = if head msg == 'E' 
+		then LogMessage (Error  (errorstrtonum ((splitMessage msg) !!1))) (errorstrtonum ((splitMessage msg) !!2)) (removespace (concatMap (++" ") (drop 3 (splitMessage msg))))
+		else if head msg == 'I'
+			then LogMessage Info (errorstrtonum ((splitMessage msg) !!1)) (removespace (concatMap (++" ") (drop 2 (splitMessage msg))))
+			else LogMessage Warning (errorstrtonum ((splitMessage msg) !!1)) (removespace (concatMap (++" ") (drop 2 (splitMessage msg))))
+
+
+parse :: String -> [LogMessage]
+parse contents = (map parseMessage (lines contents))

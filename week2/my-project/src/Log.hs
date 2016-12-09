@@ -11,6 +11,7 @@ data MessageType = Info
 
 type TimeStamp = Int
 
+--Algebraic data type
 data LogMessage = LogMessage MessageType TimeStamp String
                 | Unknown String
   deriving (Show, Eq)
