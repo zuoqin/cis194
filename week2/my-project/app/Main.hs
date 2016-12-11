@@ -17,5 +17,8 @@ convertmsgtostr msg = putStrLn (baz msg)
 
 main :: IO ()
 main = do
-	list <- x
-	(mapM_ print) list
+  list <- parse <$> readFile "E:\\DEV\\Haskell\\CIS194\\week2\\my-project\\resources\\sample.log"
+  let result = whatWentWrong list
+  (mapM_ print) result
+
+
