@@ -1,8 +1,9 @@
-# CIS 194 Week 1
-## Haskell Basics
+# CIS 194 Week 2
+## Algebraic data types
 
-1. stack new my-project
-2. cd my-project
-3. stack setup
-4. stack build
-5. stack exec my-project-exe
+Often use this [pattern to convert IO -> not IO](http://stackoverflow.com/questions/1675366/a-haskell-function-of-type-io-string-string):
+```haskell
+readAndIndex fileName = do
+    text <- readFile fileName
+    return $ index text
+```
