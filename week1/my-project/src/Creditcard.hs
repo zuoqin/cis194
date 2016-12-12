@@ -2,10 +2,10 @@
 
 module Creditcard
     ( toDigits,
-   	  toDigitsRev,
-   	  doubleEveryOther,
-   	  sumDigits,
-   	  validate
+      toDigitsRev,
+      doubleEveryOther,
+      sumDigits,
+      validate
     ) where
 
 double_function :: (Integer,Int) -> Integer
