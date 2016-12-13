@@ -1,11 +1,13 @@
 -- CIS 194 Homework 3
-
 module Golf ( skips,
               localMaxima,
               histogram,
 
-              count
+              count,
+              maxoccur
     ) where
+
+import Data.List
 
 --Exercise 1 Hopscotch
 myskip :: ([a],Int) -> [a]
@@ -34,10 +36,21 @@ localMaxima _ = []
 count :: Eq a => a -> [a] -> Int
 count x = length . filter (x==)
 
-maxoccur :: [Integer] -> Integer
+maxoccur :: [Integer] -> [Int]
 maxoccur lst = map counting [0..9]
   where counting x = count x lst
 
-histogram :: [Integer] -> [Int]
-histogram lst = map strnum  [(- (maximum (maxoccur lst)))..0]
-  where strnum x = map maxoccur lst
+buildstr :: Int -> [Int] -> [Char]
+buildstr x lst =
+  map tostr [0..9]
+    where tostr y = if (lst !! y) >= x
+                    then '*'
+                    else ' '
+
+buildup :: [Integer] -> [[Char]]
+buildup lst = map strnum  [(- (maximum (maxoccur lst)))..(-1)]
+  where strnum x = buildstr (- x) (maxoccur lst)
+
+  
+histogram :: [Integer] -> String
+histogram lst = intercalate "\n" ((buildup lst) ++ ["=========", "0123456789"])
