@@ -1,9 +1,13 @@
--- CIS 194 Homework 3
+-- CIS 194 Homework 4
 module Week4 ( fun1,
                fun2,
 
                fun3,
-               fun4
+               fun4,
+
+               xor,
+               map',
+               sieve_of_Sundaram
     ) where
 
 
@@ -31,3 +35,28 @@ fun4 n
   | even n = n + fun4 (n `div` 2)
   | otherwise = fun4 (3 * n + 1)
 
+--Exercise 3: More folds!
+fold :: b -> (a -> b -> b) -> [a] -> b
+fold z f []     = z
+fold z f (x:xs) = f x (fold z f xs)
+
+xor :: [Bool] -> Bool
+xor []     = False
+xor (x:xs) = case (fold 0 (\x s ->  if x == True then 1 + s else 0 + s) (x:xs)) `mod` 2 of
+        1 -> True
+        0 -> False
+
+
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\x xs -> f x : xs) []
+
+--Exercise 4: Finding primes
+sSundDelete :: Integer -> [Integer]            
+sSundDelete n = [i+j+2*i*j|i<-[1..n], j<-[i..n]]
+
+sieve_of_Sundaram :: Integer -> [Integer]
+sieve_of_Sundaram n =
+  let del = sSundDelete n in
+     2:[2*x+1 | x <- [1..n], not (x `elem` del)]
+
+     
